@@ -34,12 +34,13 @@ To understand a bit more about camera formats, you first need to understand a fe
   * 4k Photos, 1080p Videos, 240 FPS (ultra high FPS/slow motion)
   * 720p Photos, 720p Videos, 30 FPS (smaller buffers/e.g. faster face detection)
 * Each app has different requirements, so the format filtering is up to you.
+* The `videoResolution` and `videoAspectRatio` options also affect the preview, as preview is also running in the video stream.
 
 To get all available formats, simply use the `CameraDevice`'s [`formats` property](/docs/api/interfaces/CameraDevice#formats).  These are a [CameraFormat's](/docs/api/interfaces/CameraDeviceFormat) props:
 
 - [`photoHeight`](/docs/api/interfaces/CameraDeviceFormat#photoheight)/[`photoWidth`](/docs/api/interfaces/CameraDeviceFormat#photoWidth): The resolution that will be used for taking photos. Choose a format with your desired resolution.
-- [`videoHeight`](/docs/api/interfaces/CameraDeviceFormat#videoheight)/[`videoWidth`](/docs/api/interfaces/CameraDeviceFormat#videoWidth): The resolution that will be used for recording videos. Choose a format with your desired resolution.
-- [`minFps`](/docs/api/interfaces/CameraDeviceFormat#minfps)/[`maxFps`](/docs/api/interfaces/CameraDeviceFormat#maxfps): A range of possible values for the `fps` property. For example, if your format has `minFps: 1` and `maxFps: 60`, you can either use `fps={30}`, `fps={60}` or any other value in between for recording videos.
+- [`videoHeight`](/docs/api/interfaces/CameraDeviceFormat#videoheight)/[`videoWidth`](/docs/api/interfaces/CameraDeviceFormat#videoWidth): The resolution that will be used for recording videos and streaming into frame processors. This also affects the preview's aspect ratio. Choose a format with your desired resolution.
+- [`minFps`](/docs/api/interfaces/CameraDeviceFormat#minfps)/[`maxFps`](/docs/api/interfaces/CameraDeviceFormat#maxfps): A range of possible values for the `fps` property. For example, if your format has `minFps: 1` and `maxFps: 60`, you can either use `fps={30}`, `fps={60}` or any other value in between for recording videos and streaming into frame processors.
 - [`videoStabilizationModes`](/docs/api/interfaces/CameraDeviceFormat#videostabilizationmodes): All supported Video Stabilization Modes, digital and optical. If this specific format contains your desired [`VideoStabilizationMode`](/docs/api/#videostabilizationmode), you can pass it to your `<Camera>` via the [`videoStabilizationMode` property](/docs/api/interfaces/CameraProps#videoStabilizationMode).
 - [`pixelFormats`](/docs/api/interfaces/CameraDeviceFormat#pixelformats): All supported Pixel Formats. If this specific format contains your desired [`PixelFormat`](/docs/api/#PixelFormat), you can pass it to your `<Camera>` via the [`pixelFormat` property](/docs/api/interfaces/CameraProps#pixelFormat).
 - [`supportsVideoHdr`](/docs/api/interfaces/CameraDeviceFormat#supportsvideohdr): Whether this specific format supports true 10-bit HDR for video capture. If this is `true`, you can enable `videoHdr` on your `<Camera>`.
@@ -61,6 +62,7 @@ You can either find a matching format manually by looping through your `CameraDe
 ```ts
 const device = ...
 const format = useCameraFormat(device, [
+  { videoAspectRatio: 16 / 9 },
   { videoResolution: { width: 3048, height: 2160 } },
   { fps: 60 }
 ])
@@ -72,6 +74,7 @@ const format = useCameraFormat(device, [
 ```ts
 const device = ...
 const format = getCameraFormat(device, [
+  { videoAspectRatio: 16 / 9 },
   { videoResolution: { width: 3048, height: 2160 } },
   { fps: 60 }
 ])
